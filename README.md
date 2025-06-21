@@ -31,5 +31,5 @@
     enableLog: false           // 开启日志
   };
 </script>
-<script src="https://cdn.jsdelivr.net/gh/ziwiwiz/nezha-ui@main/traffic-progress.js"></script>
+<script src="在这里添加属于你的分发链接，这里省略"></script>
 ```
