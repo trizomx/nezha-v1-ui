@@ -19,7 +19,6 @@
 ```
 ###### 周期性流量进度条 
 ```html
-/* 周期性流量进度条 */
 <script>
   window.TrafficScriptConfig = {
     showTrafficStats: true,    // 显示流量统计
