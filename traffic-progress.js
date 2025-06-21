@@ -262,7 +262,7 @@ const trafficRenderer = (() => {
               ${defaultTimeInfoHTML}
             </div>
           </div>
-          <div class="relative h-1.5">
+          <div class="relative h-1.5"> 
             <div class="absolute inset-0 bg-neutral-100 dark:bg-neutral-800 rounded-full"></div>
             <div class="absolute inset-0 bg-emerald-500 rounded-full transition-all duration-300 progress-bar" style="width: ${percentage}%; max-width: 100%; background-color: ${progressColor};"></div>
           </div>
@@ -270,6 +270,15 @@ const trafficRenderer = (() => {
 
         oldSection.after(newElement);
         log(`插入新流量条目: ${serverName}`);
+
+        // 删除指定的出入流量统计
+        if (config.insertReplace) {
+        const outgoingStats = containerDiv.querySelector('section.flex.items-center.w-full.justify-between.gap-1');
+        if (outgoingStats) {
+          outgoingStats.remove();
+          log('删除出入流量统计，因为已插入新的流量条目');
+          };
+        };
 
         // 启用切换时，将元素及其内容保存以便周期切换
         if (config.toggleInterval > 0) {
