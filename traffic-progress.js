@@ -1,3 +1,22 @@
+<script>
+  window.ShowNetTransfer = true
+  window.DisableAnimatedMan = true
+</script>
+
+<script>
+  window.TrafficScriptConfig = {
+    showTrafficStats: true,    // 显示流量统计, 默认开启
+    insertAfter: true,         // 如果开启总流量卡片, 是否放置在总流量卡片后面, 默认为true
+    insertReplace: false,      // 如果开启，则删除出入流量统计, 默认为true
+    interval: 60000,           // 60秒刷新缓存, 单位毫秒, 默认60秒
+    toggleInterval: 5000,      // 4秒切换流量进度条右上角内容, 0秒不切换, 单位毫秒, 默认5秒
+    duration: 500,             // 缓出缓进切换时间, 单位毫秒, 默认500毫秒
+    enableLog: false,          // 开启日志, 默认关闭
+    styleNum: 1,               // 风格切换，1为经典，2为本人自定义的，默认为1
+  };
+</script>
+
+<script>
 const SCRIPT_VERSION = 'v20250617';
 // == 样式注入模块 ==
 // 注入自定义CSS隐藏特定元素
@@ -216,6 +235,7 @@ const trafficRenderer = (() => {
         utils.safeSetTextContent(existing, '.total-unit', totalFormatted.unit);
         utils.safeSetTextContent(existing, '.from-date', fromFormatted);
         utils.safeSetTextContent(existing, '.to-date', toFormatted);
+        utils.safeSetTextContent(existing, '.show-data', percentage + '% - '+ toFormatted);
         utils.safeSetTextContent(existing, '.percentage-value', percentage + '%');
         utils.safeSetTextContent(existing, '.next-update', `next update: ${nextUpdateFormatted}`);
 
@@ -236,15 +256,30 @@ const trafficRenderer = (() => {
         }
         if (!oldSection) return;
 
+
+        let defaultTimeInfoHTML; // 在外部声明变量
+        let contents = []; // 在外部声明一个数组
+
         // 时间区间内容，用于切换显示
-        const defaultTimeInfoHTML = `<span class="from-date">${fromFormatted}</span>
+        if (config.styleNum == 1) {
+            defaultTimeInfoHTML = `<span class="from-date">${fromFormatted}</span>
                 <span class="text-neutral-500 dark:text-neutral-400">-</span>
                 <span class="to-date">${toFormatted}</span>`;
-        const contents = [
-          defaultTimeInfoHTML,
-          `<span class="text-[10px] font-medium text-neutral-800 dark:text-neutral-200 percentage-value">${percentage}%</span>`,
-          `<span class="text-[10px] font-medium text-neutral-600 dark:text-neutral-300">${nextUpdateFormatted}</span>`
-        ];
+            contents = [
+                defaultTimeInfoHTML,
+                `<span class="text-[10px] font-medium text-neutral-800 dark:text-neutral-200 percentage-value">${percentage}%</span>`,
+                `<span class="text-[10px] font-medium text-neutral-600 dark:text-neutral-300">${nextUpdateFormatted}</span>`
+            ];
+        } else if (config.styleNum == 2) {
+            defaultTimeInfoHTML = `<span class="percentage-value">${percentage + '%'}</span>
+                <span class="text-neutral-500 dark:text-neutral-400">-</span>
+                <span class="to-date">${toFormatted}</span>`;
+            contents = [
+                defaultTimeInfoHTML,
+                `<span class="text-[10px] font-medium text-neutral-800 dark:text-neutral-200 percentage-value">${percentage}%</span>`,
+                `<span class="text-[10px] font-medium text-neutral-600 dark:text-neutral-300">${nextUpdateFormatted}</span>`
+            ];
+        };
 
         const newElement = document.createElement('div');
         newElement.classList.add('space-y-1.5', 'new-inserted-element', uniqueClassName);
@@ -485,7 +520,7 @@ const domObserver = (() => {
   }
 
   // 启动内容切换轮播（如时间、百分比）
-  trafficRenderer.startToggleCycle(config.toggleInterval, config.duration);
+  if (config.styleNum == 1) trafficRenderer.startToggleCycle(config.toggleInterval, config.duration);
   // 监听section变化及其子节点变化
   const sectionDetector = domObserver.startSectionDetector(onDomChange);
   // 初始化调用一次
@@ -514,3 +549,4 @@ const domObserver = (() => {
     if (trafficTimer) clearInterval(trafficTimer);
   });
 })();
+</script>
