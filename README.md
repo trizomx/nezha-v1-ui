@@ -24,6 +24,7 @@
   window.TrafficScriptConfig = {
     showTrafficStats: true,    // 显示流量统计
     insertAfter: true,         // 如果开启总流量卡片, 放置在总流量卡片后面
+    insertReplace: false,      // 如果开启，则删除出入流量统计, 默认为false
     interval: 60000,           // 60秒刷新缓存, 单位毫秒
     toggleInterval: 4000,      // 4秒切换流量进度条右上角内容, 0秒不切换, 单位毫秒
     duration: 500,             // 缓进缓出切换时间, 单位毫秒
